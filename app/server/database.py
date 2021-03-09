@@ -1,6 +1,7 @@
 import motor.motor_asyncio as m_async
 import os
 from bson.objectid import ObjectId
+from .models.when import FullReading, WhenSchema
 
 # mongo_url = os.getenv(MONGODB_URL)
 # Defined .env path
@@ -16,18 +17,19 @@ when_Collection = db.get_collection("when_collection")
 full_Collection = db.get_collection("full_reading_collection")
 
 # helpers
-def single_when_helper(when) -> dict:
+def single_when_helper(when: WhenSchema ) -> dict:
     return {
         "id": str(when["_id"]),
         "title": when["title"],
+         "description": when["description"],
     }
 
-def full_reading_helper(when) -> dict:
+def full_reading_helper(reading :FullReading) -> dict:
     return {
-        "id": str(when["_id"]),
-        "title": when["title"],
-        "readings": when["readings"]
-    }
+        "id": str(reading["_id"]),
+        "when": reading["when"],
+        "readings": reading["readings"]
+    }   
 
 
 # CRUD Operations now
@@ -35,13 +37,19 @@ def full_reading_helper(when) -> dict:
 # Get all Moods/Situatons
 async def retreive_moods():
     moods = []
-    async for mood in verse_Collection.find():
-        moods.append(when_details_helper(mood))
+    async for mood in when_Collection.find():
+        moods.append(single_when_helper(mood))
     return moods
 
 # Get all moods with  readings
-async def retreive_moods_with_details():
-    with_details = []
-    async for mood in verse_Collection.find():
-        with_details.append(when_details_helper(mood))
-    return with_details
+async def retreive_moods_with_details(id: str) -> dict:
+     mood = await full_Collection.find_one({"_id": ObjectId(id)})
+     if  mood:
+         return full_reading_helper(mood)
+    
+# Add mood to Database
+
+async def add_mood( fullReading: FullReading) -> dict:
+    readings = await  full_Collection.insert_one(fullReading)
+    new_mood = await full_Collection.find_one({"_id": readings.inserted_id})
+    return  full_reading_helper(new_mood)
