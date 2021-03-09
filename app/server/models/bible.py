@@ -19,7 +19,7 @@ class Description(BaseModel):
       
 class BibleVerse(BaseModel):
     """
-    This is be a complete Bible Verse of your current Feelings/Moods/Situation
+    This is a complete Bible Verse of your current Feelings/Moods/Situation
     """
     
     book: BookSchema = Field(...)

@@ -18,7 +18,7 @@ router = APIRouter()
 
 # Get all the Feelings/Moods witthout the readings
 @router.get("/", response_description ="All Moods are retreived")
-async def get_moods():
+async def get_readings():
     moods = await retreive_moods()
     if moods:
         return  ResponseModel(moods, "All feelings/moods retreived successfully")
@@ -27,7 +27,7 @@ async def get_moods():
 
 # Get single mood/Feeling with readings
 @router.get("/{id}", response_description="Single mood is retreived")       
-async def get_one_with_details(id):
+async def get_reading_details(id):
     one_mood  = await retreive_mood_with_details(id)
     if one_mood:
         return  ResponseModel( one_mood, "Single Reading received succesfully")
