@@ -1,7 +1,7 @@
 import motor.motor_asyncio as m_async
 import os
 from bson.objectid import ObjectId
-from .models.when import FullReading, WhenSchema
+from .models.when import FullReading
 
  
 MONGO_DETAILS = "mongodb://localhost:27017"
@@ -30,6 +30,8 @@ def reading_helper(reading :FullReading) -> dict:
 # CRUD Operations now
 
 # Get all Moods/Situatons
+
+
 async def retreive_moods():
     moods = []
     async for mood in full_Collection.find():
@@ -43,8 +45,26 @@ async def retreive_mood_with_details(id: str) -> dict:
          return reading_helper(mood)
     
 # Add mood to Database
-
 async def add_mood( fullReading: FullReading) -> dict:
     readings = await  full_Collection.insert_one(fullReading)
     new_mood = await full_Collection.find_one({"_id": readings.inserted_id})
     return  reading_helper(new_mood)
+
+# Delete reading
+async def remove_reading(id:str):
+    reading = await full_Collection.find_one({"_id": ObjectId(id)})
+    if reading:
+        await full_Collection.delete({"_id":ObjectId(id)})
+        return True
+
+#Update Reading
+async def update_reading(id:str, data:dict):
+    # return false if Body is Empty
+    if len(data) <1:
+        return False
+    reading = await full_Collection.find_one({"_id": ObjectId})
+    if reading:
+        updated_reading = await full_Collection.update_one({"_id": ObjectId}, {"$set": data})
+        if updated_reading:
+            return True
+        return False
