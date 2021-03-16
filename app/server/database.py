@@ -2,9 +2,9 @@ import motor.motor_asyncio as m_async
 import os
 from bson.objectid import ObjectId
 from .models.when import FullReading
-
+from decouple import config
  
-MONGO_DETAILS = "mongodb://localhost:27017"
+MONGO_DETAILS = config("MONGODB_URL")
 
 client = m_async.AsyncIOMotorClient(MONGO_DETAILS)
 db = client.bibleVerses_db

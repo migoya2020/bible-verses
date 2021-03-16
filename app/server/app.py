@@ -8,4 +8,4 @@ app.include_router(WhenRouter, tags=["Reading"],prefix="/reading")
 
 @app.get("/")
 async def root():
-    return {"message": "Hellow World"}
+    return {"message": "Welcome to the Bible Verses for your Feelings!"}

@@ -10,6 +10,9 @@ fastapi = "^0.63.0"
 uvicorn = "^0.13.4"
 motor = "^2.3.1"
 python-dotenv = "^0.15.0"
+python-decouple = "^3.4"
+dnspython = "^2.1.0"
+fastapi-admin = "^0.3.3"
 
 [tool.poetry.dev-dependencies]
 
