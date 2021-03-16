@@ -7,7 +7,7 @@ from app.server.database import (
     
 )
 from app.server.models.when import (
-    WhenSchema, FullReading, ResponseModel, ErrorResponseModel
+    WhenSchema, FullReading, updateReadingSchema, ResponseModel, ErrorResponseModel
     
 )
 
@@ -25,13 +25,13 @@ async def get_readings():
     return ResponseModel(moods, "Empty list returned")
 
 
-# Get single mood/Feeling with readings
-@router.get("/{id}", response_description="Single mood is retreived")       
+# Get a single  Reading for a mood/Feeling
+@router.get("/{id}", response_description="Single reading is retreived")       
 async def get_reading_details(id):
     one_mood  = await retreive_mood_with_details(id)
     if one_mood:
         return  ResponseModel( one_mood, "Single Reading received succesfully")
-    return ErrorResponseModel("An error occurred.", 404, "Student doesn't exist.")
+    return ErrorResponseModel("An error occurred.", 404, "Reading doesn't exist.")
 
 # Post some reading data
 @router.post("/", response_description=" reading added successfully")
@@ -43,8 +43,8 @@ async def add_reading( readings: FullReading = Body(...)):
 # Update reading
 @router.put("/{id}")
 async def update_reading_data(id:str, req: FullReading = Body(...)):
-    req = {k: v for k, v in req.dict().items if  v  is not None}
-    updated_reading =await update_reading( id, req )
+    req = {k: v for k, v in req.dict().items() if v is not None}
+    updated_reading =await update_reading(id,req)
     if updated_reading:
         return ResponseModel(
             
@@ -60,7 +60,7 @@ async def update_reading_data(id:str, req: FullReading = Body(...)):
     
 # Delete Reading
 @router.delete("/{id}", response_description="Strudent Data Deleted from the Database")
-async def delete_readng_data(id):
+async def delete_reading_data(id):
     deleted_reading = await remove_reading(id)
     if deleted_reading:
         return ResponseModel( "Data with ID: {}  deleted Successfully".format(id),

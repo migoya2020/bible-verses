@@ -7,7 +7,7 @@ from .bible import BibleVerse
 class WhenSchema(BaseModel):
     title: str = Field(..., title="Feelings", description="This is the mood or feeling or situation")
     description :str  = Field(None, description="Description of the mood or situation")
-    
+    imageUrl :str = Field(None, description="Header/profile image for the feeling")
     
 
 class FullReading(BaseModel):
@@ -23,7 +23,8 @@ class FullReading(BaseModel):
                             "id": "6047986f6051d1ae912acb0a",
                             "when": {
                                 "title": "Need Encouragement",
-                                "description": "whenever you feel low and you want encouragement from anybody"
+                                "description": "whenever you feel low and you want encouragement from anybody",
+                                "imageUrl":"https://www.myimagesample.com/images/default.png"
                             },
                             "readings": [
                                 {
@@ -45,8 +46,12 @@ class FullReading(BaseModel):
                             ]
                         }
    
-
-
+class updateReadingSchema(BaseModel):
+    """ 
+    This is just for updates only
+    """
+    when: WhenSchema = Optional
+    readings:  BibleVerse  = Optional 
 # print(FullReading.schema_json(indent=2))
 
 def ResponseModel(data, message):

@@ -17,6 +17,7 @@ def all_moods_helper(reading :FullReading ) -> dict:
         "id": str(reading["_id"]),
         "title": reading["when"]["title"],
          "description": reading["when"]["description"],
+         "imageUrl":reading["when"]["imageUrl"],
     }
 
 def reading_helper(reading :FullReading) -> dict:
@@ -44,17 +45,17 @@ async def retreive_mood_with_details(id: str) -> dict:
      if  mood:
          return reading_helper(mood)
     
-# Add mood to Database
+# Add mood/reading to Database
 async def add_mood( fullReading: FullReading) -> dict:
     readings = await  full_Collection.insert_one(fullReading)
     new_mood = await full_Collection.find_one({"_id": readings.inserted_id})
     return  reading_helper(new_mood)
 
-# Delete reading
+# Delete a reading
 async def remove_reading(id:str):
     reading = await full_Collection.find_one({"_id": ObjectId(id)})
     if reading:
-        await full_Collection.delete({"_id":ObjectId(id)})
+        await full_Collection.delete_one({"_id":ObjectId(id)})
         return True
 
 #Update Reading

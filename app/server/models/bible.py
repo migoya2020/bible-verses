@@ -3,7 +3,7 @@ from pydantic import BaseModel, Field
 
 
 class BookSchema(BaseModel):
-    bookNumber: int =Field(None, gt=0, lt=9)
+    bookNumber: Optional[int] =Field(None)
     bookName: str = Field(...,)
     
 class ChapterSchema(BaseModel):
@@ -11,7 +11,7 @@ class ChapterSchema(BaseModel):
      
 class VerseSchema(BaseModel):
       verseStart: int = Field(..., gt=0)
-      verseEnd: Optional[int] = Field(None, gt=0) #this will be shown if the value is available only
+      verseEnd: Optional[int] = Field(None) #this will be shown if the value is available only
       
 class Description(BaseModel):
       verseReadings: str = Field("Not available yet", description='this is the actual bible reading', title="Verse")
